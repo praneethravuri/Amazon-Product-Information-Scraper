@@ -1,8 +1,6 @@
 import time
 import csv
-import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 # from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, WebDriverException
@@ -28,28 +26,33 @@ class AmazonProductScraper:
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
         # Website URL
         self.driver.get(url)
-        print("Browser is open")
-        print(requests.get(url))
+        print(">> The browser is open")
+
         # Wait till the page has been loaded
         time.sleep(3)
 
-    def get_product_url(self, search_product_name):
+    def get_product_url(self):
+
+        search_product_name = input("Enter the product to be searched: ")
+
         # This is the product url format for all products
         product_url = "https://www.amazon.in/s?k={}&ref=nb_sb_noss"
-        # Replace the spaces with + signs to create a valid searchable url
-        search_product_name = search_product_name.replace(" ", "+")
-        product_url = product_url.format(search_product_name)
+
+        product_url = product_url.format(search_product_name.replace(" ", "+"))
+
+        print(">> Product URL: ", product_url)
+
         # Go to the product webpage
         self.driver.get(product_url)
         # To be used later while navigating to different pages
-        return product_url
+        return [product_url, search_product_name]
 
     def extract_webpage_information(self):
         # Parsing through the webpage
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
         # List of all the html information related to the product
         search_results = soup.find_all('div', {'data-component-type': 's-search-result'})
-        
+
         return search_results
 
     def extract_product_information(self, search_results):
@@ -81,7 +84,7 @@ class AmazonProductScraper:
 
             # Get number of reviews
             try:
-                review_number = item.find('span', {'class': 'a-size-base', 'dir': 'auto'}).text
+                review_number = item.find('span', {'class': 'a-size-base'}).text
             except AttributeError:
                 review_number = "N/A"
 
@@ -93,26 +96,31 @@ class AmazonProductScraper:
     
         return temporary_record
 
-    def navigate_to_other_pages(self, search_product_name):
+    def navigate_to_other_pages(self, product_details):
         # Contains the list of all the product's information
         records = []
 
-        print("Page 1 - webpage information extracted")
+        product_url = product_details[0]
+        search_product_name = product_url[1]
 
-        for i in range(2, 20):
+        print("\n>> Page 1 - webpage information extracted")
+
+        number_of_pages = self.driver.find_element_by_xpath("(//li[@class='a-disabled'])[3]")
+
+        for i in range(2, int(number_of_pages.text)+1):
             # Goes to next page
-            next_page_url = self.get_product_url(search_product_name) + "&page=" + str(i)
+            next_page_url = product_url+ "&page=" + str(i)
             self.driver.get(next_page_url)
 
             # Webpage information is stored in search_results
             search_results = self.extract_webpage_information()
             temporary_record = self.extract_product_information(search_results)
 
-            extraction_information = "Page {} - webpage information extracted"
+            extraction_information = ">> Page {} - webpage information extracted"
             print(extraction_information.format(i))
 
-            for i in temporary_record:
-                records.append(i)
+            for j in temporary_record:
+                records.append(j)
 
         self.driver.close()
 
@@ -121,33 +129,27 @@ class AmazonProductScraper:
     def product_information_spreadsheet(self, records):
 
         for _ in records:
+
             file_name = "product_info.csv"
-            with open(file_name, "w", newline='', encoding='utf-8') as f:
-
-                try:
-                    writer = csv.writer(f)
-                    # Column names
-                    writer.writerow(['Description', 'Price', 'Rating', 'Review Count', 'Product URL'])
-                    writer.writerows(records)
-                except UnicodeEncodeError:
-                    continue
-
+            f = open(file_name, "w", newline='', encoding='utf-8')
+            writer = csv.writer(f)
+            writer.writerow(['Description', 'Price', 'Rating', 'Review Count', 'Product URL'])
+            writer.writerows(records)
             f.close()
 
+        print("\n>> Product information saved in 'product_info.csv'")
 
-search_product_name = input("Enter the product to be searched: ")
-my_amazon_bot = AmazonProductScraper()
+        self.driver.close()
 
-my_amazon_bot.open_browser()
 
-start_time = datetime.now()
+if __name__ == "__main__":
 
-my_amazon_bot.get_product_url(search_product_name)
+    my_amazon_bot = AmazonProductScraper()
 
-my_amazon_bot.extract_product_information(my_amazon_bot.extract_webpage_information())
+    my_amazon_bot.open_browser()
 
-my_amazon_bot.product_information_spreadsheet(my_amazon_bot.navigate_to_other_pages(search_product_name))
+    product_details = my_amazon_bot.get_product_url()
 
-end_time = datetime.now()
+    my_amazon_bot.extract_product_information(my_amazon_bot.extract_webpage_information())
 
-print("Total time taken: " + str((end_time - start_time).total_seconds()) + " seconds")
+    my_amazon_bot.product_information_spreadsheet(my_amazon_bot.navigate_to_other_pages(product_details))
