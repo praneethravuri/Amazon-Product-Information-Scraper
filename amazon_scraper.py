@@ -139,8 +139,6 @@ class AmazonProductScraper:
 
         print("\n>> Product information saved in 'product_info.csv'")
 
-        self.driver.close()
-
 
 if __name__ == "__main__":
 
