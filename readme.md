@@ -20,8 +20,6 @@
 
 **Disclaimer**: The script sometimes will show products that are not related to your search preferences because they might be sponsered posts and the rating counts of all the products scraped might be **N/A**. Close the editor and try again and it will work. The reason for this unknown to me. I will try to add a function to detect the maximum number of pages for the product searched later.
 
-[Github - Praneeth Ravuri](https://github.com/praneethravuri)
+[**Github - Praneeth Ravuri**](https://github.com/praneethravuri)
 
-[Amazon Product Scraper V1.0](https://github.com/praneethravuri/Amazon-Product-Info-Scraper/blob/main/main_v1.0.py)
-
-[Amazon Product Scraper V1.1](https://github.com/praneethravuri/Amazon-Product-Info-Scraper/blob/main/main_v1.1.py)
+[**Amazon Product Scraper**](https://github.com/praneethravuri/Amazon-Product-Information-Scraper/blob/main/amazon_scraper.py)
