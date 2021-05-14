@@ -33,7 +33,7 @@ class AmazonProductScraper:
 
     def get_product_url(self):
 
-        search_product_name = input("Enter the product to be searched: ")
+        search_product_name = input(">> Enter the product to be searched: ")
 
         # This is the product url format for all products
         product_url = "https://www.amazon.in/s?k={}&ref=nb_sb_noss"
