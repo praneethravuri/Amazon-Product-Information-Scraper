@@ -1,6 +1,6 @@
 # **Amazon Product Information Scraper**
 
-## **Libraries Required**:
+## **Libraries Used**:
 * **time**
 * **csv**
 * **bs4**
