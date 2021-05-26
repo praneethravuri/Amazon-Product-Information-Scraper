@@ -1,12 +1,14 @@
+import os
 import time
+from datetime import date
 import csv
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
-# from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, WebDriverException
+from selenium.webdriver.chrome.options import Options
 
 """
-    Step1: Open the brower
+    Step1: Open the browser
     Step2: Search for the product 
     Step3: Extract the html content of all the products
     Step4: Extract the product description, price, ratings, reviews count and URL
@@ -22,30 +24,38 @@ class AmazonProductScraper:
         self.driver = None
 
     def open_browser(self):
+        
+        opt = Options()
+
+        opt.add_argument("--disable-infobars")
+        opt.add_argument("--disable-extensions")
+        opt.add_argument('--log-level=OFF')
+        opt.add_experimental_option('excludeSwitches', ['enable-logging'])
+
         url = "https://www.amazon.in/"
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=opt)
         # Website URL
         self.driver.get(url)
-        print(">> The browser is open")
+        print("\n>> The browser is open")
 
         # Wait till the page has been loaded
         time.sleep(3)
 
     def get_product_url(self):
 
-        search_product_name = input(">> Enter the product to be searched: ")
+        search_product_name = input(">> Enter the product to be searched: ").replace(" ", "+")
 
         # This is the product url format for all products
         product_url = "https://www.amazon.in/s?k={}&ref=nb_sb_noss"
 
-        product_url = product_url.format(search_product_name.replace(" ", "+"))
+        product_url = product_url.format(search_product_name)
 
         print(">> Product URL: ", product_url)
 
         # Go to the product webpage
         self.driver.get(product_url)
         # To be used later while navigating to different pages
-        return [product_url, search_product_name]
+        return [product_url, search_product_name, search_product_name]
 
     def extract_webpage_information(self):
         # Parsing through the webpage
@@ -55,7 +65,8 @@ class AmazonProductScraper:
 
         return search_results
 
-    def extract_product_information(self, search_results):
+    @staticmethod
+    def extract_product_information(search_results):
         temporary_record = []
         for i in range(len(search_results)):
             item = search_results[i]
@@ -126,18 +137,27 @@ class AmazonProductScraper:
 
         return records
 
-    def product_information_spreadsheet(self, records):
+    @staticmethod
+    def product_information_spreadsheet(records, product_details):
+
+        today = date.today().strftime("%d-%m-%Y")
 
         for _ in records:
 
-            file_name = "product_info.csv"
+            searched_product = product_details[-1]
+
+            file_name = "{}_{}.csv".format(searched_product, today)
             f = open(file_name, "w", newline='', encoding='utf-8')
             writer = csv.writer(f)
             writer.writerow(['Description', 'Price', 'Rating', 'Review Count', 'Product URL'])
             writer.writerows(records)
             f.close()
 
-        print("\n>> Product information saved in 'product_info.csv'")
+        message = ("\n>> Information about the product '{}' is stored in {}").format(searched_product, file_name)
+
+        print(message)
+
+        os.startfile(file_name)
 
 
 if __name__ == "__main__":
@@ -150,4 +170,6 @@ if __name__ == "__main__":
 
     my_amazon_bot.extract_product_information(my_amazon_bot.extract_webpage_information())
 
-    my_amazon_bot.product_information_spreadsheet(my_amazon_bot.navigate_to_other_pages(product_details))
+    navigation = my_amazon_bot.navigate_to_other_pages(product_details)
+
+    my_amazon_bot.product_information_spreadsheet(navigation, product_details)

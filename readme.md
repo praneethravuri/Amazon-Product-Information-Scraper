@@ -12,13 +12,11 @@
 
  A new _**CSV**_ file is created for each product. Some of the products may not have the reviews, price or number of ratings and are denoted as _**N/A**_ in the _**CSV**_ file.
 
- Amazon has a maximum number of _**20**_ pages for each product and the script goes through all the pages. Sometimes, the number of pages might be less than _**20**_ but the script will continue to run. It won't affect the performance of the program. I will try to add a function to detect the maximum number of pages.
+Click on ***AmazonProductScraper.exe*** to run the script
 
- The second script _**main_v1.1.py**_ has a bit more functionality like calculating the _**time**_ it took to extract and printing messages.
+![Example Image](Images/sample.png)
 
-![Example Image](sample.png)
-
-**Disclaimer**: The script sometimes will show products that are not related to your search preferences because they might be sponsered posts and the rating counts of all the products scraped might be **N/A**. Close the editor and try again and it will work. The reason for this unknown to me. I will try to add a function to detect the maximum number of pages for the product searched later.
+**Disclaimer**: The script sometimes will show products that are not related to your search preferences because they might be sponsered posts or ads and the rating counts of all the products scraped might be **N/A**.
 
 [**Github - Praneeth Ravuri**](https://github.com/praneethravuri)
 
