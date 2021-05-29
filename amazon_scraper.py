@@ -116,7 +116,9 @@ class AmazonProductScraper:
 
         print("\n>> Page 1 - webpage information extracted")
 
-        number_of_pages = self.driver.find_element_by_xpath("(//li[@class='a-disabled'])[3]")
+        max_number_of_pages = "(//li[@class='a-disabled'])[3]"
+
+        number_of_pages = self.driver.find_element_by_xpath(max_number_of_pages)
 
         for i in range(2, int(number_of_pages.text)+1):
             # Goes to next page
