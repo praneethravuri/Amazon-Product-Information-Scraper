@@ -162,6 +162,7 @@ class AmazonProductScraper:
         os.startfile(file_name)
 
 
+
 if __name__ == "__main__":
 
     my_amazon_bot = AmazonProductScraper()
