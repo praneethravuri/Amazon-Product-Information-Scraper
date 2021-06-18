@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import NoSuchElementException
 
 """
     Step1: Open the browser
@@ -116,9 +117,15 @@ class AmazonProductScraper:
 
         print("\n>> Page 1 - webpage information extracted")
 
-        max_number_of_pages = "(//li[@class='a-disabled'])[3]"
+        try:
 
-        number_of_pages = self.driver.find_element_by_xpath(max_number_of_pages)
+            max_number_of_pages = "(//li[@class='a-disabled'])[3]"
+
+            number_of_pages = self.driver.find_element_by_xpath(max_number_of_pages)
+        except NoSuchElementException:
+            max_number_of_pages = "//li[@class='a-normal'][last()]"
+            number_of_pages = self.driver.find_element_by_xpath(max_number_of_pages)
+
 
         for i in range(2, int(number_of_pages.text)+1):
             # Goes to next page
