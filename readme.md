@@ -1,5 +1,11 @@
 # **Amazon Product Information Scraper**
 
+
+[**Download the source code**](https://github.com/praneethravuri/Amazon-Product-Information-Scraper/releases/download/v1.0/Amazon-Product-Information-Scraper.zip
+)
+
+<hr>
+
 ## **Libraries Used**:
 * **time**
 * **csv**
@@ -17,9 +23,6 @@ Click on ***AmazonProductScraper.exe*** to run the script
 ![Example Image](Images/sample.png)
 
 **Disclaimer**: The script sometimes will show products that are not related to your search preferences because they might be sponsered posts or ads and the rating counts of all the products scraped might be **N/A**.
-
-[**Download the source code**](https://github.com/praneethravuri/Amazon-Product-Information-Scraper/releases/download/v1.0/Amazon-Product-Information-Scraper.zip
-)
 
 [**Github - Praneeth Ravuri**](https://github.com/praneethravuri)
 
