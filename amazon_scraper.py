@@ -144,6 +144,8 @@ class AmazonProductScraper:
 
         self.driver.close()
 
+        print("\n>> Creating an excel sheets and entering the details...")
+
         return records
 
     @staticmethod
@@ -162,7 +164,7 @@ class AmazonProductScraper:
             writer.writerows(records)
             f.close()
 
-        message = ("\n>> Information about the product '{}' is stored in {}").format(searched_product, file_name)
+        message = (">> Information about the product '{}' is stored in {}\n").format(searched_product, file_name)
 
         print(message)
 
