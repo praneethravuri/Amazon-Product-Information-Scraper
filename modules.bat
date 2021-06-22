@@ -1,0 +1,1 @@
+pip3 install bs4 selenium webdriver_manager
