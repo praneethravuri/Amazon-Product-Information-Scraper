@@ -1,5 +1,11 @@
 # **Amazon Product Information Scraper**
 
+
+[**Download the source code**](https://github.com/praneethravuri/Amazon-Product-Information-Scraper/releases/download/v1.0/Amazon-Product-Information-Scraper.zip
+)
+
+<hr>
+
 ## **Libraries Used**:
 * **time**
 * **csv**
@@ -21,3 +27,4 @@ Click on ***AmazonProductScraper.exe*** to run the script
 [**Github - Praneeth Ravuri**](https://github.com/praneethravuri)
 
 [**Amazon Product Scraper**](https://github.com/praneethravuri/Amazon-Product-Information-Scraper/blob/main/amazon_scraper.py)
+
