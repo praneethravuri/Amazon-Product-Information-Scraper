@@ -23,6 +23,8 @@ from selenium.common.exceptions import NoSuchElementException
 class AmazonProductScraper:
     def __init__(self):
         self.driver = None
+        self.category_name = None
+        self.formatted_category_name = None
 
     def open_browser(self):
         
@@ -37,49 +39,50 @@ class AmazonProductScraper:
         self.driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=opt)
         # Website URL
         self.driver.get(url)
-        print("\n>> The browser is open")
 
         # Wait till the page has been loaded
         time.sleep(3)
 
-    def get_product_url(self):
+    def get_category_url(self):
 
-        search_product_name = input(">> Enter the product to be searched: ").replace(" ", "+")
+        self.category_name = input(">> Enter the product/category to be searched: ")
+
+        self.formatted_category_name = self.category_name.replace(" ", "+")
 
         # This is the product url format for all products
-        product_url = "https://www.amazon.in/s?k={}&ref=nb_sb_noss"
+        category_url = "https://www.amazon.in/s?k={}&ref=nb_sb_noss"
 
-        product_url = product_url.format(search_product_name)
+        category_url = category_url.format(self.formatted_category_name)
 
-        print(">> Product URL: ", product_url)
+        print(">> Category URL: ", category_url)
 
         # Go to the product webpage
-        self.driver.get(product_url)
+        self.driver.get(category_url)
         # To be used later while navigating to different pages
-        return [product_url, search_product_name, search_product_name]
+        return category_url
 
     def extract_webpage_information(self):
         # Parsing through the webpage
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
         # List of all the html information related to the product
-        search_results = soup.find_all('div', {'data-component-type': 's-search-result'})
+        page_results = soup.find_all('div', {'data-component-type': 's-search-result'})
 
-        return search_results
+        return page_results
 
     @staticmethod
-    def extract_product_information(search_results):
-        temporary_record = []
-        for i in range(len(search_results)):
-            item = search_results[i]
+    def extract_product_information(page_results):
+        temp_record = []
+        for i in range(len(page_results)):
+            item = page_results[i]
 
             # Find the a tag of the item
-            atag_item = item.h2.a
+            a_tag_item = item.h2.a
 
             # Name of the item
-            description = atag_item.text.strip()
+            description = a_tag_item.text.strip()
 
             # Get the url of the item
-            product_url = "https://www.amazon.in/" + atag_item.get('href')
+            category_url = "https://www.amazon.in/" + a_tag_item.get('href')
 
             # Get the price of the product
             try:
@@ -101,19 +104,16 @@ class AmazonProductScraper:
                 review_number = "N/A"
 
             # Store the product information in a tuple
-            product_information = (description,  product_price[1:], product_review, review_number, product_url)
+            product_information = (description,  product_price[1:], product_review, review_number, category_url)
 
             # Store the information in a temporary record
-            temporary_record.append(product_information)
+            temp_record.append(product_information)
     
-        return temporary_record
+        return temp_record
 
-    def navigate_to_other_pages(self, product_details):
+    def navigate_to_other_pages(self, category_url):
         # Contains the list of all the product's information
         records = []
-
-        product_url = product_details[0]
-        search_product_name = product_url[1]
 
         print("\n>> Page 1 - webpage information extracted")
 
@@ -129,42 +129,41 @@ class AmazonProductScraper:
 
         for i in range(2, int(number_of_pages.text)+1):
             # Goes to next page
-            next_page_url = product_url+ "&page=" + str(i)
+            next_page_url = category_url+ "&page=" + str(i)
             self.driver.get(next_page_url)
 
-            # Webpage information is stored in search_results
-            search_results = self.extract_webpage_information()
-            temporary_record = self.extract_product_information(search_results)
+            # Webpage information is stored in page_results
+            page_results = self.extract_webpage_information()
+            temp_record = self.extract_product_information(page_results)
 
             extraction_information = ">> Page {} - webpage information extracted"
             print(extraction_information.format(i))
 
-            for j in temporary_record:
+            for j in temp_record:
                 records.append(j)
 
         self.driver.close()
 
-        print("\n>> Creating an excel sheets and entering the details...")
+        print("\n>> Creating an excel sheet and entering the details...")
 
         return records
 
-    @staticmethod
-    def product_information_spreadsheet(records, product_details):
+    def product_information_spreadsheet(self, records):
 
         today = date.today().strftime("%d-%m-%Y")
 
         for _ in records:
 
-            searched_product = product_details[-1]
+            
 
-            file_name = "{}_{}.csv".format(searched_product, today)
+            file_name = "{}_{}.csv".format(self.category_name, today)
             f = open(file_name, "w", newline='', encoding='utf-8')
             writer = csv.writer(f)
             writer.writerow(['Description', 'Price', 'Rating', 'Review Count', 'Product URL'])
             writer.writerows(records)
             f.close()
 
-        message = (">> Information about the product '{}' is stored in {}\n").format(searched_product, file_name)
+        message = (">> Information about the product '{}' is stored in {}\n").format(self.category_name, file_name)
 
         print(message)
 
@@ -178,10 +177,10 @@ if __name__ == "__main__":
 
     my_amazon_bot.open_browser()
 
-    product_details = my_amazon_bot.get_product_url()
+    category_details = my_amazon_bot.get_category_url()
 
     my_amazon_bot.extract_product_information(my_amazon_bot.extract_webpage_information())
 
-    navigation = my_amazon_bot.navigate_to_other_pages(product_details)
+    navigation = my_amazon_bot.navigate_to_other_pages(category_details)
 
-    my_amazon_bot.product_information_spreadsheet(navigation, product_details)
+    my_amazon_bot.product_information_spreadsheet(navigation)
