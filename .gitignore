@@ -144,3 +144,5 @@ _pycache-/*
 *_pycache_/*
 *.pyc
 *.csv
+*.bat
+*.spec

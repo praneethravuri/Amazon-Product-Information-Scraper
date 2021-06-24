@@ -1,2 +1,0 @@
-
-        except NoSuchElementException:
