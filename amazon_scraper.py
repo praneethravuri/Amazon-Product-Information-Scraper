@@ -45,7 +45,7 @@ class AmazonProductScraper:
 
     def get_category_url(self):
 
-        self.category_name = input(">> Enter the product/category to be searched: ")
+        self.category_name = input("\n>> Enter the product/category to be searched: ")
 
         self.formatted_category_name = self.category_name.replace(" ", "+")
 
