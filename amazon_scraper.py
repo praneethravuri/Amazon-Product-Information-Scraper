@@ -27,7 +27,7 @@ class AmazonProductScraper:
         self.formatted_category_name = None
 
     def open_browser(self):
-        
+
         opt = Options()
 
         opt.add_argument("--disable-infobars")
@@ -75,7 +75,7 @@ class AmazonProductScraper:
         for i in range(len(page_results)):
             item = page_results[i]
 
-            # Find the a tag of the item
+            # Find the 'a' tag of the item
             a_tag_item = item.h2.a
 
             # Name of the item
@@ -104,11 +104,11 @@ class AmazonProductScraper:
                 review_number = "N/A"
 
             # Store the product information in a tuple
-            product_information = (description,  product_price[1:], product_review, review_number, category_url)
+            product_information = (description, product_price[1:], product_review, review_number, category_url)
 
             # Store the information in a temporary record
             temp_record.append(product_information)
-    
+
         return temp_record
 
     def navigate_to_other_pages(self, category_url):
@@ -127,9 +127,9 @@ class AmazonProductScraper:
             max_number_of_pages = "//li[@class='a-normal'][last()]"
             number_of_pages = self.driver.find_element_by_xpath(max_number_of_pages)
 
-        for i in range(2, int(number_of_pages.text)+1):
+        for i in range(2, int(number_of_pages.text) + 1):
             # Goes to next page
-            next_page_url = category_url+ "&page=" + str(i)
+            next_page_url = category_url + "&page=" + str(i)
             self.driver.get(next_page_url)
 
             # Webpage information is stored in page_results
@@ -153,9 +153,6 @@ class AmazonProductScraper:
         today = date.today().strftime("%d-%m-%Y")
 
         for _ in records:
-
-            
-
             file_name = "{}_{}.csv".format(self.category_name, today)
             f = open(file_name, "w", newline='', encoding='utf-8')
             writer = csv.writer(f)
@@ -163,16 +160,14 @@ class AmazonProductScraper:
             writer.writerows(records)
             f.close()
 
-        message = (">> Information about the product '{}' is stored in {}\n").format(self.category_name, file_name)
+        message = f">> Information about the product '{self.category_name}' is stored in {file_name}\n"
 
         print(message)
 
         os.startfile(file_name)
 
 
-
 if __name__ == "__main__":
-
     my_amazon_bot = AmazonProductScraper()
 
     my_amazon_bot.open_browser()

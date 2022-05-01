@@ -1,8 +1,7 @@
 # **Amazon Product Information Scraper**
 
 
-[**Download the source code**](https://github.com/praneethravuri/Amazon-Product-Information-Scraper/releases/download/v1.0/Amazon-Product-Information-Scraper.zip
-)
+
 
 <hr>
 
