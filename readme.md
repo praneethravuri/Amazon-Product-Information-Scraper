@@ -1,6 +1,6 @@
 # **Amazon Product Information Scraper**
 
-***I did not update this repo in a year so some functions might not work***
+***Note: I did not update this repo in a year so some functions might not work***
 
 
 <hr>
