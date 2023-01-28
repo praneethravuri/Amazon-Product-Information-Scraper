@@ -27,3 +27,5 @@ Click on ***AmazonProductScraper.exe*** to run the script
 
 [**Amazon Product Scraper**](https://github.com/praneethravuri/Amazon-Product-Information-Scraper/blob/main/amazon_scraper.py)
 
+***I did not update this repo in a year so some functions might not work***
+
