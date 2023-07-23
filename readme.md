@@ -9,7 +9,7 @@
 * **time**
 * **csv**
 * **bs4**
-* **selenium**
+* **selenium**s
 * **requests**
 * **webdriver_manager**
 
@@ -21,7 +21,7 @@ Click on ***AmazonProductScraper.exe*** to run the script
 
 ![Example Image](Images/sample.png)
 
-**Disclaimer**: The script sometimes will show products that are not related to your search preferences because they might be sponsered posts or ads and the rating counts of all the products scraped might be **N/A**.
+**Disclaimer**: The script sometimes will show products that are not related to your search preferences because they might be sponsored posts or ads and the rating counts of all the products scraped might be **N/A**.
 
 [**Github - Praneeth Ravuri**](https://github.com/praneethravuri)
 
